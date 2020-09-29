@@ -15,26 +15,25 @@ namespace SeckillExamples.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class TestController : ControllerBase
+    public class OrderController : ControllerBase
     {
 
         //注入上下文
         private ESHOPContext _context;
 
-        public TestController(ESHOPContext context) //依赖注入得到实例  
+        public OrderController(ESHOPContext context) //依赖注入得到实例  
         {
             _context = context;
         }
 
         //线程安全的队列
-        //  ConcurrentQueue<ModelQueueParam> queue = new ConcurrentQueue<ModelQueueParam>();
         ConcurrentQueue<ModelQueueParam> queue = GlobalParam.queue;
         ConcurrentQueue<int> queueNum = GlobalParam.queueNum;
 
         /********************** 接口*****************************/
 
 
-        #region 下单
+        #region 秒杀
         [HttpGet]
         public string order(string usreId = "y0001", string arcId = "y01", string totalPrice = "")
         {
