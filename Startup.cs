@@ -31,8 +31,9 @@ namespace SeckillExamples
             //通过配置文件使用上下文    
             services.AddDbContext<ESHOPContext>(options =>
                      options.UseSqlServer(Configuration.GetConnectionString("TestEntity")));
-            //配置初始化任务
-            //services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, CreatQueueTimeService>();
+            //配置初始化后台任务
+           // services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, APIBackgroundService>();
+            services.AddHostedService<APIBackgroundService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
