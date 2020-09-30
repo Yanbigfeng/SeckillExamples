@@ -19,6 +19,7 @@ namespace SeckillExamples.Models
         public static int queueStockrNum = 0; //进行记录初始化秒杀库存-总值模式
 
 
+
        //后台秒杀中启用库存的时候才会使用
         //public static Thread _worker;
         //public static EventWaitHandle _wh = new AutoResetEvent(false);

@@ -19,10 +19,10 @@ namespace SeckillExamples
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration _configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -30,10 +30,16 @@ namespace SeckillExamples
             services.AddControllers();
             //通过配置文件使用上下文    
             services.AddDbContext<ESHOPContext>(options =>
-                     options.UseSqlServer(Configuration.GetConnectionString("TestEntity")));
+                     options.UseSqlServer(_configuration.GetConnectionString("TestEntity")));
             //配置初始化后台任务
            // services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, APIBackgroundService>();
             services.AddHostedService<APIBackgroundService>();
+
+            //注册Redis单例连接类
+            var connectionString = _configuration["RedisStr:connectionString"];
+            int defaultDB = Convert.ToInt32(_configuration["RedisStr:defaultDB"]);
+            services.AddSingleton(new RedisHelp(connectionString, defaultDB));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
