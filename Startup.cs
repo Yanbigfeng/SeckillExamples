@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,7 +33,7 @@ namespace SeckillExamples
             services.AddDbContext<ESHOPContext>(options =>
                      options.UseSqlServer(_configuration.GetConnectionString("TestEntity")));
             //配置初始化后台任务
-           // services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, APIBackgroundService>();
+            // services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, APIBackgroundService>();
             services.AddHostedService<APIBackgroundService>();
 
             //注册Redis单例连接类
@@ -57,6 +58,19 @@ namespace SeckillExamples
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGet("/", async context =>
+                {
+                    //api基本使用自定义路由
+
+                    //根节点页面输出
+                    await context.Response.WriteAsync("Hello World!");
+
+
+                    //mvc配置控制器路由
+                    endpoints.MapControllerRoute(
+                             name: "default",
+                             pattern: "{controller=Home}/{action=Index}/{id?}");
+                });
             });
         }
     }
