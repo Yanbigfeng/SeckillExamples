@@ -360,16 +360,6 @@ namespace SeckillExamples.API
             ModelQueueParam modelQueue = new ModelQueueParam();
             modelQueue.userId = userId;
             modelQueue.seckillArticleId = seckillArticleId;
-
-
-            #region 使用reids队列进行储存
-            var jsonStr = JsonHelp.ToJsonString(modelQueue);
-            _redisdb.ListLeftPush("stock-y", jsonStr);
-
-            #endregion
-            return 1;
-
-
             //总值模式
             lock (lockRedis)
             {
@@ -380,8 +370,8 @@ namespace SeckillExamples.API
                     GlobalParam.queueStockrNum--;
                     //进行生产-可以下单
                     #region 使用reids队列进行储存
-                    //var jsonStr = JsonHelp.ToJsonString(modelQueue);
-                    _redisdb.ListLeftPush("stock-y", jsonStr);
+                    var jsonStr = JsonHelp.ToJsonString(modelQueue);
+                    _redisdb.ListLeftPush("order-key", jsonStr);
 
                     #endregion
                     return 1;
@@ -426,7 +416,7 @@ namespace SeckillExamples.API
                     var saved = false;//处理并发字段
                     lock (_lockerRedisEnqueue)
                     {
-                        string redisValue = _redisdb.ListRightPop("stock-y").ToString();
+                        string redisValue = _redisdb.ListRightPop("order-key").ToString();
                         if (redisValue == null)
                         {
                             data = null;
